@@ -1,0 +1,18 @@
+.ColorPicker-input {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  outline: 0;
+  border: 0;
+}
+
+.ColorPicker-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.ColorPicker-input::-webkit-color-swatch {
+  border: none;
+  border-radius: var(--border-radius);
+}

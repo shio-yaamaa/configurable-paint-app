@@ -1,0 +1,27 @@
+/* Reference: https://medium.com/cloudaper/how-to-create-a-flexible-square-grid-with-css-grid-layout-ea48baf038f3 */
+
+.ColorPalette {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(24px, 1fr));
+  grid-auto-rows: 1fr;
+  gap: var(--narrow-gap);
+  margin-top: var(--narrow-gap);
+}
+
+.ColorPalette::before {
+  content: "";
+  width: 0;
+  padding-bottom: 100%;
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+
+.ColorPalette > *:first-child {
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+
+.ColorPalette-option {
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}

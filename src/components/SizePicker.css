@@ -1,0 +1,15 @@
+.SizePicker-range-input {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.SizePicker-number-input {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 4px 8px;
+  border: 1px var(--text-color) solid;
+  border-radius: var(--border-radius);
+  background: none;
+}

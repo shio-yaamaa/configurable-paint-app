@@ -1,0 +1,7 @@
+.App {
+  display: grid;
+  grid-template-columns: var(--toolbar-width) auto;
+
+  width: 100vw;
+  height: 100vh;
+}

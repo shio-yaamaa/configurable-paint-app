@@ -1,0 +1,18 @@
+.PenPreview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 2px var(--text-color) solid;
+  border-radius: var(--border-radius);
+}
+
+.PenPreview:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.PenPreview-content {
+  border-radius: 50%;
+}
