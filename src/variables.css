@@ -1,0 +1,11 @@
+:root {
+  --text-color: #333333;
+  --disabled-text-color: #666666;
+  --background-color: #f8f8f8;
+  --button-background-color: #eeeeee;
+  --button-background-color-on-hover: #dddddd;
+
+  --toolbar-width: 160px;
+  --border-radius: 4px;
+  --narrow-gap: 4px;
+}
