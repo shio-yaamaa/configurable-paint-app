@@ -22,3 +22,29 @@
 .Toolbar-bottom > *:not(:first-child) {
   margin-top: var(--narrow-gap);
 }
+
+/* Can be <button> or <a> */
+.Toolbar-button {
+  display: block;
+  width: 100%;
+  height: 2rem;
+  font-weight: bolder;
+  line-height: 2rem;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text-color);
+  background-color: var(--button-background-color);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.Toolbar-button.disabled {
+  color: var(--disabled-text-color);
+  cursor: disabled;
+}
+
+.Toolbar-button:not(.disabled):hover {
+  background-color: var(--button-background-color-on-hover);
+}

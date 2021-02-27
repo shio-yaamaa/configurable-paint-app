@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import './App.css';
 import { Config } from '../types';
 import { Canvas } from './Canvas';
@@ -18,6 +18,12 @@ export const App: React.VFC<Props> = (props) => {
     },
   ] = usePaintApp(props.config);
 
+  const [dataUrl, setDataUrl] = useState('#');
+  const handleDownload = useCallback(() => {
+    if (!canvas || !canvas.current) return;
+    setDataUrl(canvas.current.toDataURL('image/png'));
+  }, [canvas]);
+
   return (
     <div className='App'>
       <Toolbar
@@ -26,10 +32,12 @@ export const App: React.VFC<Props> = (props) => {
         penSize={penSize}
         minPenSize={1}
         maxPenSize={100}
+        dataUrl={dataUrl}
         clearCanvas={clearCanvas}
         fillCanvas={fillCanvas}
         handleColorChange={handleColorChange}
-        handlePenSizeChange={handlePenSizeChange} />
+        handlePenSizeChange={handlePenSizeChange}
+        handleDownload={handleDownload} />
       <Canvas
         width={props.config.width}
         height={props.config.height}

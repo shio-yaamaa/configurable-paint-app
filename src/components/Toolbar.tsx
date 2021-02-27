@@ -5,7 +5,6 @@ import { PenPreview } from './PenPreview';
 import { ColorPicker } from './ColorPicker';
 import { ColorPalette } from './ColorPalette';
 import { SizePicker } from './SizePicker';
-import { ToolbarButton } from './ToolbarButton';
 
 interface Props {
   color: Color;
@@ -15,10 +14,15 @@ interface Props {
   minPenSize: number;
   maxPenSize: number;
 
+  dataUrl: string;
+
   clearCanvas: () => void;
   fillCanvas: (color: Color) => void;
+
   handleColorChange: (color: Color) => void;
   handlePenSizeChange: (size: number) => void;
+
+  handleDownload: () => void;
 }
 
 export const Toolbar: React.VFC<Props> = (props) => {
@@ -53,14 +57,21 @@ export const Toolbar: React.VFC<Props> = (props) => {
             handleSizeChange={props.handlePenSizeChange} />
         </div>
         <div className='Toolbar-section'>
-          <ToolbarButton label='Fill' handleClick={() => props.fillCanvas(props.color)} />
+          <button className='Toolbar-button' onClick={() => props.fillCanvas(props.color)}>Fill</button>
         </div>
       </div>
       <div className='Toolbar-bottom'>
-        <ToolbarButton label='Undo' handleClick={() => {}} />
-        <ToolbarButton label='Redo' handleClick={() => {}} />
-        <ToolbarButton label='Clear' handleClick={props.clearCanvas} />
-        <ToolbarButton label='Save' handleClick={() => {}} />
+        <button className='Toolbar-button' onClick={() => {}}>Undo</button>
+        <button className='Toolbar-button' onClick={() => {}}>Redo</button>
+        <button className='Toolbar-button' onClick={props.clearCanvas}>Clear</button>
+        <a
+          className='Toolbar-button'
+          download='image.png'
+          onClick={props.handleDownload}
+          href={props.dataUrl}
+        >
+          Save
+        </a>
       </div>
     </aside>
   );
