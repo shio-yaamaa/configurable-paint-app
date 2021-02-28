@@ -2,6 +2,10 @@
 
 A paint app configurable via query parameters.
 
+## Screenshot
+
+<img src="https://github.com/shio-yaamaa/configurable-paint-app/blob/master/docs/screenshot.png">
+
 ## Configuration
 
 | Name                | Description                           | Type                  | Default  | Notes                             |
