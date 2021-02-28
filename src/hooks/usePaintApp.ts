@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+import { HistoryStack } from '../HistoryStack';
 import { Color, Config } from '../types';
 
 type PaintAppReturnType = [
@@ -6,6 +7,9 @@ type PaintAppReturnType = [
     canvas: React.MutableRefObject<HTMLCanvasElement | undefined>,
     color: Color,
     penSize: number,
+
+    canUndo: boolean,
+    canRedo: boolean,
   },
   {
     initCanvas: () => void,
@@ -13,6 +17,9 @@ type PaintAppReturnType = [
     fillCanvas: (color: Color) => void,
     handleColorChange: (color: Color) => void,
     handlePenSizeChange: (size: number) => void,
+
+    undo: () => void,
+    redo: () => void,
   },
 ];
 
@@ -28,10 +35,37 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
   const lastX = useRef(0);
   const lastY = useRef(0);
 
+  const historyStack = useRef(new HistoryStack<ImageData>(30));
+
+  const [canUndo, setCanUndo] = useState(historyStack.current.canUndo());
+  const [canRedo, setCanRedo] = useState(historyStack.current.canRedo());
+
+  const undo = useCallback(() => {
+    if (!ctx.current) return;
+    const imageData = historyStack.current.undo();
+    if (imageData === null) return;
+    ctx.current.putImageData(imageData, 0, 0);
+    setCanUndo(historyStack.current.canUndo());
+    setCanRedo(historyStack.current.canRedo());
+  }, []);
+
+const redo = useCallback(() => {
+    if (!ctx.current) return;
+    const imageData = historyStack.current.redo();
+    if (imageData === null) return;
+    ctx.current.putImageData(imageData, 0, 0);
+    setCanUndo(historyStack.current.canUndo());
+    setCanRedo(historyStack.current.canRedo());
+  }, []);
+
   const fillCanvas = useCallback((color: Color) => {
     if (!canvas || !canvas.current || !ctx || !ctx.current) return;
     ctx.current.fillStyle = color;
     ctx.current.fillRect(0, 0, canvas.current.width, canvas.current.height);
+
+    historyStack.current.push(ctx.current.getImageData(0, 0, canvas.current.width, canvas.current.height));
+    setCanUndo(historyStack.current.canUndo());
+    setCanRedo(historyStack.current.canRedo());
   }, []);
 
   const clearCanvas = useCallback(() => {
@@ -62,7 +96,14 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
   }, []);
 
   const stopDrawing = useCallback(() => {
+    if (!isDrawing.current) return;
     isDrawing.current = false;
+
+    if (ctx.current && canvas.current) {
+      historyStack.current.push(ctx.current.getImageData(0, 0, canvas.current.width, canvas.current.height));
+      setCanUndo(historyStack.current.canUndo());
+      setCanRedo(historyStack.current.canRedo());
+    }
   }, []);
 
   const initCanvas = useCallback(() => {
@@ -73,9 +114,6 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
       canvas.current.addEventListener('mouseup', stopDrawing);
       canvas.current.addEventListener('mouseout', stopDrawing);
 
-      // canvas.current.width = window.innerWidth - 196;
-      // canvas.current.height = window.innerHeight;
-
       ctx.current.strokeStyle = color;
       ctx.current.lineJoin = 'round';
       ctx.current.lineCap = 'round';
@@ -85,7 +123,7 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
 
       hasCanvasInitialized.current = true;
     }
-  }, [startDrawing, draw, stopDrawing, clearCanvas]);
+  }, [color, penSize, startDrawing, draw, stopDrawing, clearCanvas]);
 
   const handleColorChange = useCallback((color: Color) => {
     setColor(color);
@@ -107,6 +145,8 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
       canvas,
       color,
       penSize,
+      canUndo,
+      canRedo,
     },
     {
       initCanvas,
@@ -114,6 +154,8 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
       fillCanvas,
       handleColorChange,
       handlePenSizeChange,
+      undo,
+      redo,
     }
   ];
 };

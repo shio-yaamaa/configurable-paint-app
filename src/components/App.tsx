@@ -11,10 +11,14 @@ interface Props {
 
 export const App: React.VFC<Props> = (props) => {
   const [
-    { canvas, color, penSize },
     {
-        initCanvas, clearCanvas, fillCanvas,
-        handleColorChange, handlePenSizeChange
+      canvas, color, penSize,
+      canUndo, canRedo,
+    },
+    {
+      initCanvas, clearCanvas, fillCanvas,
+      handleColorChange, handlePenSizeChange,
+      undo, redo,
     },
   ] = usePaintApp(props.config);
 
@@ -32,11 +36,15 @@ export const App: React.VFC<Props> = (props) => {
         penSize={penSize}
         minPenSize={1}
         maxPenSize={100}
+        canUndo={canUndo}
+        canRedo={canRedo}
         dataUrl={dataUrl}
         clearCanvas={clearCanvas}
         fillCanvas={fillCanvas}
         handleColorChange={handleColorChange}
         handlePenSizeChange={handlePenSizeChange}
+        undo={undo}
+        redo={redo}
         handleDownload={handleDownload} />
       <Canvas
         width={props.config.width}

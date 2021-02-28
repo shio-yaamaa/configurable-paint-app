@@ -14,6 +14,9 @@ interface Props {
   minPenSize: number;
   maxPenSize: number;
 
+  canUndo: boolean;
+  canRedo: boolean;
+
   dataUrl: string;
 
   clearCanvas: () => void;
@@ -21,6 +24,9 @@ interface Props {
 
   handleColorChange: (color: Color) => void;
   handlePenSizeChange: (size: number) => void;
+
+  undo: () => void;
+  redo: () => void;
 
   handleDownload: () => void;
 }
@@ -61,8 +67,16 @@ export const Toolbar: React.VFC<Props> = (props) => {
         </div>
       </div>
       <div className='Toolbar-bottom'>
-        <button className='Toolbar-button' onClick={() => {}}>Undo</button>
-        <button className='Toolbar-button' onClick={() => {}}>Redo</button>
+        <button
+          className={`Toolbar-button ${props.canUndo ? '' : 'disabled'}`}
+          onClick={props.undo}>
+          Undo
+        </button>
+        <button
+          className={`Toolbar-button ${props.canRedo ? '' : 'disabled'}`}
+          onClick={props.redo}>
+          Redo
+        </button>
         <button className='Toolbar-button' onClick={props.clearCanvas}>Clear</button>
         <a
           className='Toolbar-button'
