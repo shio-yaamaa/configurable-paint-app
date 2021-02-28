@@ -1,3 +1,10 @@
+.Canvas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: scroll;
+}
+
 .Canvas-canvas {
   border: 1px #eeeeee solid;
 }
