@@ -1,7 +1,7 @@
 .Toolbar {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: var(--wide-gap);
 }
 
 .Toolbar-top {
@@ -9,7 +9,7 @@
 }
 
 .Toolbar-section:not(:first-child) {
-  margin-top: 20px;
+  margin-top: var(--wide-gap);
 }
 
 .Toolbar-title {
