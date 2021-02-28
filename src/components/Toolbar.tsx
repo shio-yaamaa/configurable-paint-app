@@ -86,6 +86,14 @@ export const Toolbar: React.VFC<Props> = (props) => {
         >
           Save
         </a>
+        <a
+          className='Toolbar-link'
+          href='https://github.com/shio-yaamaa/configurable-paint-app'
+          target='_blank'
+          rel='noreferrer'
+        >
+          About this page
+        </a>
       </div>
     </aside>
   );
