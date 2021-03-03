@@ -49,7 +49,7 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
     setCanRedo(historyStack.current.canRedo());
   }, []);
 
-const redo = useCallback(() => {
+  const redo = useCallback(() => {
     if (!ctx.current) return;
     const imageData = historyStack.current.redo();
     if (imageData === null) return;
