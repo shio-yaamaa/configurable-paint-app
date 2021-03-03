@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import './App.css';
 import { Config } from '../types';
 import { Canvas } from './Canvas';
@@ -19,6 +19,7 @@ export const App: React.VFC<Props> = (props) => {
       initCanvas, clearCanvas, fillCanvas,
       handleColorChange, handlePenSizeChange,
       undo, redo,
+      checkUnsavedChanges, notifySave,
     },
   ] = usePaintApp(props.config);
 
@@ -26,7 +27,21 @@ export const App: React.VFC<Props> = (props) => {
   const handleDownload = useCallback(() => {
     if (!canvas || !canvas.current) return;
     setDataUrl(canvas.current.toDataURL('image/png'));
-  }, [canvas]);
+    notifySave();
+  }, [canvas, notifySave]);
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', (event) => {
+      const hasUnsavedChanges = checkUnsavedChanges();
+      if (hasUnsavedChanges) {
+        event.preventDefault();
+        event.returnValue = '';
+        return 'Close without saving?';
+      } else {
+        delete event['returnValue'];
+      }
+    });
+  }, []);
 
   return (
     <div className='App'>
