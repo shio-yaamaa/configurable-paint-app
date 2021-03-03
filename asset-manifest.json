@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/configurable-paint-app/static/css/main.852572bf.chunk.css",
-    "main.js": "/configurable-paint-app/static/js/main.6d442f56.chunk.js",
-    "main.js.map": "/configurable-paint-app/static/js/main.6d442f56.chunk.js.map",
+    "main.css": "/configurable-paint-app/static/css/main.5a88b0b3.chunk.css",
+    "main.js": "/configurable-paint-app/static/js/main.efd4da0e.chunk.js",
+    "main.js.map": "/configurable-paint-app/static/js/main.efd4da0e.chunk.js.map",
     "runtime-main.js": "/configurable-paint-app/static/js/runtime-main.78ef0704.js",
     "runtime-main.js.map": "/configurable-paint-app/static/js/runtime-main.78ef0704.js.map",
     "static/js/2.d7de95bd.chunk.js": "/configurable-paint-app/static/js/2.d7de95bd.chunk.js",
     "static/js/2.d7de95bd.chunk.js.map": "/configurable-paint-app/static/js/2.d7de95bd.chunk.js.map",
     "index.html": "/configurable-paint-app/index.html",
-    "static/css/main.852572bf.chunk.css.map": "/configurable-paint-app/static/css/main.852572bf.chunk.css.map",
+    "static/css/main.5a88b0b3.chunk.css.map": "/configurable-paint-app/static/css/main.5a88b0b3.chunk.css.map",
     "static/js/2.d7de95bd.chunk.js.LICENSE.txt": "/configurable-paint-app/static/js/2.d7de95bd.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.78ef0704.js",
     "static/js/2.d7de95bd.chunk.js",
-    "static/css/main.852572bf.chunk.css",
-    "static/js/main.6d442f56.chunk.js"
+    "static/css/main.5a88b0b3.chunk.css",
+    "static/js/main.efd4da0e.chunk.js"
   ]
 }
