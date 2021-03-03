@@ -109,13 +109,34 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
     if (!isDrawing.current) return;
     isDrawing.current = false;
 
-    if (ctx.current && canvas.current) {
-      historyStack.current.push(ctx.current.getImageData(0, 0, canvas.current.width, canvas.current.height));
-      setCanUndo(historyStack.current.canUndo());
-      setCanRedo(historyStack.current.canRedo());
-      hasUnsavedChanges.current = true;
-    }
+    if (!ctx.current || !canvas.current) return;
+    historyStack.current.push(ctx.current.getImageData(0, 0, canvas.current.width, canvas.current.height));
+    setCanUndo(historyStack.current.canUndo());
+    setCanRedo(historyStack.current.canRedo());
+    hasUnsavedChanges.current = true;
   }, []);
+
+  // The change before and after resuming are both in the same history stack item.
+  // Currently it cannot distinguish between these two scenarios:
+  // - mouseout -> mouseover
+  // - mouseout -> mouseup -> mousedown -> mouseover
+  // Ideally, the latter case should count as two separate history stack items.
+  // If I really want to implement that,
+  // maybe I should consider moving mouse-related event listeners to the document or window.
+  const resumeDrawing = useCallback((event: MouseEvent) => {
+    const isMousePressed = (event.buttons & 1) === 1;
+    if (isMousePressed) {
+      isDrawing.current = true;
+      [lastX.current, lastY.current] = [event.offsetX, event.offsetY];
+    } else {
+      // A history stack item is added when the mouse enters the canvas,
+      // not when the mouse is released outside the canvas.
+      // This is a bit confusing behavior if you carefully observe when the undo/redo buttons activate/deactivate.
+      if (isDrawing.current) {
+        stopDrawing();
+      }
+    }
+  }, [stopDrawing]);
 
   const initCanvas = useCallback(() => {
     ctx.current = canvas?.current?.getContext('2d');
@@ -123,7 +144,8 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
       canvas.current.addEventListener('mousedown', startDrawing);
       canvas.current.addEventListener('mousemove', draw);
       canvas.current.addEventListener('mouseup', stopDrawing);
-      canvas.current.addEventListener('mouseout', stopDrawing);
+      canvas.current.addEventListener('mouseout', draw);
+      canvas.current.addEventListener('mouseover', resumeDrawing);
 
       ctx.current.strokeStyle = color;
       ctx.current.lineJoin = 'round';
@@ -134,7 +156,7 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
 
       hasCanvasInitialized.current = true;
     }
-  }, [color, penSize, startDrawing, draw, stopDrawing, clearCanvas]);
+  }, [color, penSize, startDrawing, draw, stopDrawing, resumeDrawing, clearCanvas]);
 
   const handleColorChange = useCallback((color: Color) => {
     setColor(color);
