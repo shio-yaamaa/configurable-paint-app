@@ -20,6 +20,9 @@ type PaintAppReturnType = [
 
     undo: () => void,
     redo: () => void,
+
+    checkUnsavedChanges: () => boolean,
+    notifySave: () => void,
   },
 ];
 
@@ -31,6 +34,7 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
   const [penSize, setPenSize] = useState(config.initialPenSize);
 
   const hasCanvasInitialized = useRef(false);
+  const hasUnsavedChanges = useRef(false);
   const isDrawing = useRef(false);
   const lastX = useRef(0);
   const lastY = useRef(0);
@@ -47,6 +51,7 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
     ctx.current.putImageData(imageData, 0, 0);
     setCanUndo(historyStack.current.canUndo());
     setCanRedo(historyStack.current.canRedo());
+    hasUnsavedChanges.current = true;
   }, []);
 
   const redo = useCallback(() => {
@@ -56,9 +61,10 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
     ctx.current.putImageData(imageData, 0, 0);
     setCanUndo(historyStack.current.canUndo());
     setCanRedo(historyStack.current.canRedo());
+    hasUnsavedChanges.current = true;
   }, []);
 
-  const fillCanvas = useCallback((color: Color) => {
+  const fillCanvas = useCallback((color: Color, initiatedByUser = true) => {
     if (!canvas || !canvas.current || !ctx || !ctx.current) return;
     ctx.current.fillStyle = color;
     ctx.current.fillRect(0, 0, canvas.current.width, canvas.current.height);
@@ -66,10 +72,13 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
     historyStack.current.push(ctx.current.getImageData(0, 0, canvas.current.width, canvas.current.height));
     setCanUndo(historyStack.current.canUndo());
     setCanRedo(historyStack.current.canRedo());
+    if (initiatedByUser) {
+      hasUnsavedChanges.current = true;
+    }
   }, []);
 
-  const clearCanvas = useCallback(() => {
-    fillCanvas(config.backgroundColor);
+  const clearCanvas = useCallback((initiatedByUser = true) => {
+    fillCanvas(config.backgroundColor, initiatedByUser);
   }, [config.backgroundColor, fillCanvas]);
 
   const startDrawing = useCallback((event: MouseEvent) => {
@@ -103,6 +112,7 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
       historyStack.current.push(ctx.current.getImageData(0, 0, canvas.current.width, canvas.current.height));
       setCanUndo(historyStack.current.canUndo());
       setCanRedo(historyStack.current.canRedo());
+      hasUnsavedChanges.current = true;
     }
   }, []);
 
@@ -119,7 +129,7 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
       ctx.current.lineCap = 'round';
       ctx.current.lineWidth = penSize;
 
-      clearCanvas();
+      clearCanvas(false);
 
       hasCanvasInitialized.current = true;
     }
@@ -140,6 +150,14 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
     }
   }, []);
 
+  const checkUnsavedChanges = useCallback(() => {
+    return hasUnsavedChanges.current;
+  }, []);
+
+  const notifySave = useCallback(() => {
+    hasUnsavedChanges.current = false;
+  }, []);
+
   return [
     {
       canvas,
@@ -156,6 +174,8 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
       handlePenSizeChange,
       undo,
       redo,
+      checkUnsavedChanges,
+      notifySave,
     }
   ];
 };
