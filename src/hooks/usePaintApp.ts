@@ -109,12 +109,11 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
     if (!isDrawing.current) return;
     isDrawing.current = false;
 
-    if (ctx.current && canvas.current) {
-      historyStack.current.push(ctx.current.getImageData(0, 0, canvas.current.width, canvas.current.height));
-      setCanUndo(historyStack.current.canUndo());
-      setCanRedo(historyStack.current.canRedo());
-      hasUnsavedChanges.current = true;
-    }
+    if (!ctx.current || !canvas.current) return;
+    historyStack.current.push(ctx.current.getImageData(0, 0, canvas.current.width, canvas.current.height));
+    setCanUndo(historyStack.current.canUndo());
+    setCanRedo(historyStack.current.canRedo());
+    hasUnsavedChanges.current = true;
   }, []);
 
   const initCanvas = useCallback(() => {
