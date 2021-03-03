@@ -10,6 +10,8 @@ type PaintAppReturnType = [
 
     canUndo: boolean,
     canRedo: boolean,
+
+    hasUnsavedChanges: React.MutableRefObject<boolean>,
   },
   {
     initCanvas: () => void,
@@ -21,7 +23,6 @@ type PaintAppReturnType = [
     undo: () => void,
     redo: () => void,
 
-    checkUnsavedChanges: () => boolean,
     notifySave: () => void,
   },
 ];
@@ -150,10 +151,6 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
     }
   }, []);
 
-  const checkUnsavedChanges = useCallback(() => {
-    return hasUnsavedChanges.current;
-  }, []);
-
   const notifySave = useCallback(() => {
     hasUnsavedChanges.current = false;
   }, []);
@@ -165,6 +162,7 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
       penSize,
       canUndo,
       canRedo,
+      hasUnsavedChanges,
     },
     {
       initCanvas,
@@ -174,7 +172,6 @@ export const usePaintApp = (config: Config): PaintAppReturnType => {
       handlePenSizeChange,
       undo,
       redo,
-      checkUnsavedChanges,
       notifySave,
     }
   ];

@@ -14,12 +14,13 @@ export const App: React.VFC<Props> = (props) => {
     {
       canvas, color, penSize,
       canUndo, canRedo,
+      hasUnsavedChanges,
     },
     {
       initCanvas, clearCanvas, fillCanvas,
       handleColorChange, handlePenSizeChange,
       undo, redo,
-      checkUnsavedChanges, notifySave,
+      notifySave,
     },
   ] = usePaintApp(props.config);
 
@@ -32,8 +33,7 @@ export const App: React.VFC<Props> = (props) => {
 
   useEffect(() => {
     window.addEventListener('beforeunload', (event) => {
-      const hasUnsavedChanges = checkUnsavedChanges();
-      if (hasUnsavedChanges) {
+      if (hasUnsavedChanges.current) {
         event.preventDefault();
         event.returnValue = '';
         return 'Close without saving?';
